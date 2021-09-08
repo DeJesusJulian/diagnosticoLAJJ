@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+        integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+        crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/938364cfa6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+    <title>Diagnostico</title>
+</head>
+
+<body ng-app="simen" ng-controller="controllerapp">
+    <header>
+        <img class="rounded-circle img-fluid" alt="Logo" src="https://images.vexels.com/media/users/3/151869/isolated/preview/767ca771755f4675d4063c03e17c8595-icono-de-lista-de-verificacion-medica.png" data-holder-rendered="true"
+            style="width:6rem; height:6rem">
+        <label class="titulo"><strong>
+                <h3>Lista de usuarios</h3>
+            </strong></label>
+
+    </header>
+    <div class="container">
+
+        <div class="contenedorTabla row" style="margin-bottom:15%;">
+            <div class="card-header col-md-12">Usuarios <strong>Req | Res <i class="fas fa-user-tie"> <i class="fas fa-building"></i></i></strong></div>
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Registrar usuario
+                </button>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Usuario</th>
+                    </tr>
+                </thead>
+                <tbody id="response">
+
+                </tbody>
+            </table>
+
+            <!--cards-->
+            <!-- Button trigger modal -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Registro de usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="">
+                                <div>
+                                    <label for="">Nombre</label>
+                                    <input id="name" type="text" required>
+                                </div>
+
+                                <div>
+                                    <label for="">Trabajo</label>
+                                    <input id="job" type="text" required>
+                                </div>
+                                <div>
+                                    <label for="">Correo</label>
+                                    <input id="email" type="text" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" onclick="register()" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align:center">
+        2021 - Universidad Tecnológica Emiliano Zapata del Estado de Morelos
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let listAux = [];
+        function getPosts() {
+            return new Promise(function (resolve, reject) {
+                var req = new XMLHttpRequest();
+                req.open('GET', 'https://reqres.in/api/users?page=2');
+
+                req.onload = function () {
+                    if (req.status == 200) {
+                        resolve(JSON.parse(req.response));
+                    }
+                    else {
+                        reject();
+                    }
+                };
+
+                req.send();
+            })
+        }
+
+        getPosts().then(data => {
+
+            console.log(data.data);
+            let res = document.querySelector('#response');
+            let list = JSON.stringify(data.data)
+            let aux = JSON.parse(list);
+            console.log(aux);
+            res.innerHTML = '';
+            listAux = aux;
+            let i = 1;
+            for (let item of listAux) {
+                console.log(item);
+                res.innerHTML += `
+                    <div class="card" style="width: 10rem;">
+                        <img src="${item.avatar}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.first_name}</h5>
+                            <p class="card-text">${item.email}</p>
+                        </div>
+                    </div>
+                    `;
+            }
+        });
+
+
+        function create() {
+            let res2 = document.querySelector('#response');
+            res2.innerHTML += `
+                <div class="card" style="width: 10rem;">
+                        <img src="https://assets.stickpng.com/images/585e4beacb11b227491c3399.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${document.getElementById('name').value}</h5>
+                            <p class="card-text">${document.getElementById('job').value}</p>
+                        </div>
+                </div>
+                    `;
+        };
+        var req2;
+        function register() {
+            let url = 'https://reqres.in/api/users';
+            let obj = {
+                name: document.getElementById('name').value,
+                job: document.getElementById('job').value
+            }
+            console.log(obj);
+            let aux = JSON.stringify(obj)
+            console.log(aux);
+
+            return new Promise(function (resolve, reject) {
+
+                req2 = new XMLHttpRequest();
+                req2.onreadystatechange = alertContents;
+                req2.open('POST', url);
+                req2.setRequestHeader('Content-Type', 'application/json');
+                req2.send(aux);
+            });
+        };
+
+        function alertContents() {
+            if (req2.readyState === XMLHttpRequest.DONE) {
+                if (req2.status === 200) {
+                    alert(req2.responseText);
+                } else {
+                    alert("se registro" + req2.responseText);
+
+                    create();
+                }
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
